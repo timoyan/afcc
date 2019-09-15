@@ -1,0 +1,48 @@
+{
+    "name": "@sample/root",
+    "private": true,
+    "version": "independent",
+    "description": "",
+    "main": "index.js",
+    "workspaces": [
+        "packages/*",
+        "packages/*/packages/*"
+    ],
+    "scripts": {
+        "preinstall": "rimraf node_modules",
+        "install": "npx lerna link",
+        "sample-dev": "cd packages/sample && yarn dev",
+        "sample-build-preprod": "cd packages/sample && yarn build-preprod",
+        "sample-build-prod": "cd packages/sample && yarn build-prod",
+        "sample-lint": "cd packages/sample && yarn lint",
+        "sample-type-check": "cd packages/sample && yarn type-check",
+        "sample-test": "cd packages/sample && yarn test"
+    },
+    "author": "Timo Yan",
+    "license": "ISC",
+    "devDependencies": {
+        "lerna": "3.16.4",
+        "cross-env": "5.2.1",
+        "husky": "3.0.5",
+        "lint-staged": "9.2.5",
+        "prettier": "1.18.2",
+        "rimraf": "3.0.0"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn sample-type-check && npx lint-staged",
+            "pre-push": "yarn sample-test"
+        }
+    },
+    "lint-staged": {
+        "packages\\sample\\**\\*.{ts,tsx}": [
+            "yarn sample-lint",
+            "prettier --write",
+            "git add"
+        ],
+        "*.json": [
+            "prettier --write",
+            "git add"
+        ]
+    }
+}

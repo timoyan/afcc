@@ -1,0 +1,10 @@
+{
+    "name": "@sample/epics",
+    "version": "0.1.0",
+    "description": "",
+    "author": "Timo Yan",
+    "license": "ISC",
+    "dependencies": {
+        "rxjs": "6.5.3"
+    }
+}
