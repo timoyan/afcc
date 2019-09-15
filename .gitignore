@@ -95,4 +95,4 @@ typings/
 .dynamodb/
 
 # Test Report
-packages\sample\TestCoverage
+packages/sample/TestCoverage
