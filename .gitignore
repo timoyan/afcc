@@ -96,3 +96,6 @@ typings/
 
 # Test Report
 packages/sample/TestCoverage
+
+# Build output dir
+packages/sample/build

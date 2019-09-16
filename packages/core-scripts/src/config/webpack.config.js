@@ -167,11 +167,11 @@ module.exports = function(env, isBuild, host, port) {
                     {},
                     {
                         inject: false,
-                        template: isBuild ? paths.assetsHtml : paths.appHtml
+                        template: paths.appHtml
                     },
                     isBuild
                         ? {
-                              filename: '_Assets.cshtml',
+                              filename: 'index.html',
                               minify: {
                                   removeComments: true,
                                   collapseWhitespace: true,
