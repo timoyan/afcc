@@ -1,7 +1,7 @@
 import 'normalize.css';
 import * as React from 'react';
 import styled, { injectGlobal } from 'react-emotion';
-import { Home } from './home';
+import { HomeComponent } from './home';
 
 injectGlobal({
     '*': {
@@ -38,7 +38,7 @@ const Header = styled('header')({
     display: 'flex',
     flexflow: 'row nowrap',
     height: '6rem',
-    fontSize: '2rem',
+    fontSize: '2.5rem',
     '& span': {
         display: 'inline-flex',
         alignItems: 'center',
@@ -58,7 +58,7 @@ const Footer = styled(`footer`)({
     display: 'flex',
     flexFlow: 'column wrap',
     height: '6rem',
-    fontSize: '1rem',
+    fontSize: '1.5rem',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -88,7 +88,7 @@ export default () => (
             <span>BROCCOLI & CO.</span>
         </Header>
         <Main>
-            <Home />
+            <HomeComponent />
         </Main>
         <Footer>
             <span>

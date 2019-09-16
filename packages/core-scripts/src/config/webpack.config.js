@@ -15,7 +15,7 @@ const shouldUseSourceMap = true;
 const publicPath = '/';
 
 module.exports = function(env, isBuild, host, port) {
-    process.env.PLATFORM = process.env.PLATFORM || 'desktop';
+    // process.env.PLATFORM = process.env.PLATFORM || 'desktop';
     const configExtensions = ['.ts', '.tsx', '.js', '.json'];
     const isEnvDevelopment = env === 'dev';
     const isEnvProduction = env === 'prod';
@@ -24,9 +24,9 @@ module.exports = function(env, isBuild, host, port) {
     /// Handle Platform
     const defaultExtensions = ['.ts', '.tsx', '.js', '.json'];
 
-    defaultExtensions.forEach(extension => {
-        configExtensions.unshift(`.${process.env.PLATFORM}${extension}`);
-    });
+    // defaultExtensions.forEach(extension => {
+    //     configExtensions.unshift(`.${process.env.PLATFORM}${extension}`);
+    // });
     ///
 
     const getStyleLoaders = (cssOptions, preProcessor) => {

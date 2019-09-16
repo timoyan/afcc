@@ -6,7 +6,6 @@
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <meta name="theme-color" content="#000000" />
         <title>sample</title>
     </head>
 
@@ -16,11 +15,10 @@
         </noscript>
 
         <div id="root"></div>
-        
+
         <% _.forEach(htmlWebpackPlugin.files.js, function(js) { %>
         <script type="text/javascript" src="<%-js%>"></script>
         <% }); _.forEach(htmlWebpackPlugin.files.css, function(css) { %>
         <link rel="stylesheet" type="text/css" href="<%-css%>" /> <% }); %>
-                
     </body>
 </html>

@@ -24,8 +24,6 @@ module.exports = {
     ],
     coverageDirectory: './TestCoverage/',
     transformIgnorePatterns: [],
-    moduleNameMapper: {
-        '\\.css$': 'identity-obj-proxy'
-    },
+    moduleNameMapper: {},
     preset: 'ts-jest'
 };
