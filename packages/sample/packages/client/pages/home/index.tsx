@@ -157,16 +157,13 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
     validateFormData = () => {
         const { formData } = this.state;
         const formError: IIModalInvitationFormError = getDefaultFormErrorState();
+        const emailReg: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if ((formData.fullName || '').length < 3) {
             formError.fullName = true;
         }
 
-        if (
-            !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-                formData.email || ''
-            )
-        ) {
+        if (!emailReg.test(formData.email || '')) {
             formError.email = true;
         }
 
