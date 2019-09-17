@@ -4,6 +4,7 @@ import { Modal } from '../modal';
 
 interface IModalInvitationCompleteProps {
     handleClose: () => void;
+    testid?: string;
 }
 
 export class ModalInvitationComplete extends React.PureComponent<
@@ -13,7 +14,7 @@ export class ModalInvitationComplete extends React.PureComponent<
 
     render() {
         return (
-            <Modal>
+            <Modal testId={this.props.testid}>
                 <span
                     className={css({
                         fontStyle: 'italic',

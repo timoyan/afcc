@@ -3,15 +3,15 @@ import * as React from 'react';
 import styled, { css } from 'react-emotion';
 import { Modal } from '../modal';
 
-const Textbox = styled('input')<{ isError: boolean }>(
+const Textbox = styled('input')<{ isValid: boolean }>(
     {
         width: '100%',
         margin: '5px 0',
         height: '3rem'
     },
-    ({ isError = false }) => {
+    ({ isValid }) => {
         const styles: CSSObject = {};
-        if (isError) {
+        if (!isValid) {
             styles.outline = '1.5px solid red';
         }
         return styles;
@@ -23,26 +23,25 @@ const ErrorMessage = styled('span')({
     color: 'red'
 });
 
-export interface IIModalInvitationFormData {
-    email: string;
-    fullName: string;
-    confirmEmail: string;
+export interface IInivitationForm {
+    fullName: IInivitationFormField;
+    email: IInivitationFormField;
+    confirmEmail: IInivitationFormField;
+    serverErrorMessage: string;
 }
 
-export interface IIModalInvitationFormError {
-    email: boolean;
-    fullName: boolean;
-    confirmEmail: boolean;
-    serverError: string;
+export interface IInivitationFormField {
+    value: string;
+    isValid: boolean;
 }
 
 interface IModalInvitationFormProps {
     handleClose: () => void;
     handleInputChange: (name: string, value: string) => void;
     handleSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-    data: IIModalInvitationFormData;
-    error: IIModalInvitationFormError;
+    formData: IInivitationForm;
     isProcessing: boolean;
+    testid?: string;
 }
 
 export class ModalInvitationForm extends React.PureComponent<IModalInvitationFormProps> {
@@ -54,9 +53,9 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
     };
 
     render() {
-        const { data, error, isProcessing, handleSubmit, handleClose } = this.props;
+        const { formData, isProcessing, handleSubmit, handleClose, testid } = this.props;
         return (
-            <Modal handleClose={handleClose}>
+            <Modal handleClose={handleClose} testId={testid}>
                 <span
                     className={css({
                         fontStyle: 'italic',
@@ -79,30 +78,33 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
                     placeholder="Full name"
                     name="fullName"
                     onChange={this.handleTextChange}
-                    value={data.fullName || ''}
-                    isError={error.fullName}
+                    value={formData.fullName.value || ''}
+                    isValid={formData.fullName.isValid}
                     disabled={isProcessing}
+                    data-testid="fullNameTextbox"
                 />
                 <Textbox
                     type="text"
                     placeholder="Email"
                     name="email"
                     onChange={this.handleTextChange}
-                    value={data.email || ''}
-                    isError={error.email}
+                    value={formData.email.value || ''}
+                    isValid={formData.email.isValid}
                     disabled={isProcessing}
+                    data-testid="emailTextbox"
                 />
                 <Textbox
                     type="text"
                     placeholder="Confirm email"
                     name="confirmEmail"
                     onChange={this.handleTextChange}
-                    value={data.confirmEmail || ''}
-                    isError={error.confirmEmail}
+                    value={formData.confirmEmail.value || ''}
+                    isValid={formData.confirmEmail.isValid}
                     disabled={isProcessing}
+                    data-testid="confirmEmailTextbox"
                 />
                 <button
-                    data-qa-element="InvitationSubmitButton"
+                    data-testid="InvitationSubmitButton"
                     className={css({
                         width: '100%',
                         marginTop: '3rem',
@@ -113,7 +115,7 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
                 >
                     {isProcessing ? 'Sending, please wait...' : 'Send'}
                 </button>
-                <ErrorMessage>{error.serverError}</ErrorMessage>
+                <ErrorMessage>{formData.serverErrorMessage}</ErrorMessage>
             </Modal>
         );
     }

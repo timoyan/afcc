@@ -26,5 +26,4 @@ module.exports = {
     transformIgnorePatterns: [],
     moduleNameMapper: {},
     preset: 'ts-jest',
-    setupFiles: ['./packages/tests/setup.tsx']
 };

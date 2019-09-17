@@ -39,6 +39,7 @@ const Body = styled('div')({
 
 interface IModalProps {
     handleClose?: () => void;
+    testId?: string;
 }
 
 export class Modal extends React.PureComponent<IModalProps> {
@@ -52,13 +53,10 @@ export class Modal extends React.PureComponent<IModalProps> {
     };
 
     render() {
-        const { children } = this.props;
+        const { children, testId } = this.props;
         return ReactDOM.createPortal(
-            <Wrapper>
-                <Overlay
-                    data-qa-element="ModalOverlay"
-                    onClick={this.handleOverlayClick}
-                />
+            <Wrapper data-testid={testId}>
+                <Overlay data-testid="ModalOverlay" onClick={this.handleOverlayClick} />
                 <Body>{children}</Body>
             </Wrapper>,
             document.body

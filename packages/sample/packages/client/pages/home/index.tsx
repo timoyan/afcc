@@ -1,8 +1,8 @@
-import { UsersAPI } from '@sample/apis';
+import { UsersAPI } from '@sample/apis/users';
 import { ModalInvitationComplete } from '@sample/components/modal-invitation-complete';
 import {
-    IIModalInvitationFormData,
-    IIModalInvitationFormError,
+    IInivitationForm,
+    IInivitationFormField,
     ModalInvitationForm
 } from '@sample/components/modal-invitation-form';
 import { produce } from 'immer';
@@ -55,24 +55,24 @@ interface IHomeState {
     isInvitationFormShown: boolean;
     isInvitationFormCompleted: boolean;
     isProcessing: boolean;
-    formData: IIModalInvitationFormData;
-    formError: IIModalInvitationFormError;
+    formData: IInivitationForm;
 }
 
-const getDefaultFormDataState = (): IIModalInvitationFormData => {
+const getDefaultFormDataState = (): IInivitationForm => {
     return {
-        fullName: undefined,
-        email: undefined,
-        confirmEmail: undefined
-    };
-};
-
-const getDefaultFormErrorState = (): IIModalInvitationFormError => {
-    return {
-        fullName: false,
-        email: false,
-        confirmEmail: false,
-        serverError: undefined
+        fullName: {
+            value: undefined,
+            isValid: true
+        },
+        email: {
+            value: undefined,
+            isValid: true
+        },
+        confirmEmail: {
+            value: undefined,
+            isValid: true
+        },
+        serverErrorMessage: undefined
     };
 };
 
@@ -84,8 +84,7 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
             isInvitationFormShown: false,
             isInvitationFormCompleted: false,
             isProcessing: false,
-            formData: getDefaultFormDataState(),
-            formError: getDefaultFormErrorState()
+            formData: getDefaultFormDataState()
         };
     }
 
@@ -96,7 +95,6 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
             draft.isInvitationFormShown = isShown;
             if (isShown) {
                 draft.formData = getDefaultFormDataState();
-                draft.formError = getDefaultFormErrorState();
             }
         });
 
@@ -110,7 +108,7 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
     handleInputChange = (name: string, value: string) => {
         this.setState(
             produce(this.state, draft => {
-                draft.formData[name] = value;
+                draft.formData[name]['value'] = value;
             })
         );
     };
@@ -121,7 +119,7 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
             this.setState({ isProcessing: true }, () => {
                 const usersAPI = new UsersAPI();
                 usersAPI
-                    .register(formData.fullName, formData.email)
+                    .register(formData.fullName.value, formData.email.value)
                     .pipe(
                         switchMap((value, index) => {
                             return of(value);
@@ -140,7 +138,7 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
                         error: (err: AjaxError) => {
                             this.setState(
                                 produce(this.state, draft => {
-                                    draft.formError.serverError =
+                                    draft.formData.serverErrorMessage =
                                         err.response['errorMessage'];
                                     draft.isProcessing = false;
                                 })
@@ -155,29 +153,26 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
     };
 
     validateFormData = () => {
-        const { formData } = this.state;
-        const formError: IIModalInvitationFormError = getDefaultFormErrorState();
         const emailReg: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-        if ((formData.fullName || '').length < 3) {
-            formError.fullName = true;
-        }
+        const newFormData = produce<IInivitationForm>(this.state.formData, draft => {
+            draft.fullName.isValid = (draft.fullName.value || '').length >= 3;
 
-        if (!emailReg.test(formData.email || '')) {
-            formError.email = true;
-        }
+            draft.email.isValid = emailReg.test(draft.email.value || '');
 
-        if (
-            formData.confirmEmail !== formData.email ||
-            formData.confirmEmail === undefined
-        ) {
-            formError.confirmEmail = true;
-        }
+            draft.confirmEmail.isValid =
+                draft.confirmEmail.value !== undefined &&
+                draft.confirmEmail.value === draft.email.value;
+        });
+
+        console.log(newFormData);
 
         const hasError: boolean =
-            (Object.values(formError) as boolean[]).filter(val => val === true).length > 0;
+            (Object.values(newFormData) as IInivitationFormField[]).filter(
+                (val: IInivitationFormField) => !!val && !val.isValid
+            ).length > 0;
 
-        this.setState({ formError });
+        this.setState({ formData: newFormData });
 
         return !hasError;
     };
@@ -188,7 +183,11 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
                 <span className={IntroCSS}>A better way</span>
                 <span className={IntroCSS}>to enjoy every day.</span>
                 <span className={NotedCSS}>Be the first to know when we launch.</span>
-                <span className={ButtonCSS} onClick={this.toggleForm}>
+                <span
+                    className={ButtonCSS}
+                    onClick={this.toggleForm}
+                    data-qa-element="RequestInviteButton"
+                >
                     Request an invite
                 </span>
                 {this.state.isInvitationFormShown && (
@@ -196,9 +195,9 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
                         handleClose={this.toggleForm}
                         handleInputChange={this.handleInputChange}
                         handleSubmit={this.handleFormSubmit}
-                        data={this.state.formData}
-                        error={this.state.formError}
+                        formData={this.state.formData}
                         isProcessing={this.state.isProcessing}
+                        testid={'ModalInvitationFormModal'}
                     />
                 )}
                 {this.state.isInvitationFormCompleted && (
