@@ -150,10 +150,19 @@ test('Home Page Component Testing', async () => {
 
     // Act
     const fullNameTextbox = getByTestId('fullNameTextbox');
-    userEvent.type(fullNameTextbox, 'test');
     const emailTextbox = getByTestId('emailTextbox');
-    userEvent.type(emailTextbox, 'bean@mail.com');
     const confirmEmailTextbox = getByTestId('confirmEmailTextbox');
+    const submitButton = getByTestId('InvitationSubmitButton');
+
+    userEvent.type(fullNameTextbox, 'ff');
+    userEvent.click(submitButton);
+
+    // Assert
+    expect(getByTestId('fullNameTextbox')).toHaveStyle(`outline: 1.5px solid red;`);
+
+    // Act
+    userEvent.type(emailTextbox, 'bean@mail.com');
+    userEvent.type(fullNameTextbox, 'test');
     userEvent.type(confirmEmailTextbox, 'bean@mail.com');
 
     // Assert
@@ -162,7 +171,6 @@ test('Home Page Component Testing', async () => {
     expect(confirmEmailTextbox).toHaveProperty('value', 'bean@mail.com');
 
     // Act
-    const submitButton = getByTestId('InvitationSubmitButton');
     userEvent.click(submitButton);
 
     // Assert
