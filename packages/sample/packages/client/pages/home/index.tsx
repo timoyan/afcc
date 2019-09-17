@@ -165,8 +165,6 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
                 draft.confirmEmail.value === draft.email.value;
         });
 
-        console.log(newFormData);
-
         const hasError: boolean =
             (Object.values(newFormData) as IInivitationFormField[]).filter(
                 (val: IInivitationFormField) => !!val && !val.isValid
