@@ -10,7 +10,7 @@
     ],
     "scripts": {
         "preinstall": "rm -rf node_modules",
-        "install": "npx lerna link",
+        "install": "npx lerna link && yarn sample-test",
         "sample-dev": "cd packages/sample && yarn dev",
         "sample-build-preprod": "cd packages/sample && yarn build-preprod",
         "sample-build-prod": "cd packages/sample && yarn build-prod",

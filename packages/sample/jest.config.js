@@ -10,7 +10,7 @@ module.exports = {
             isolatedModules: true
         }
     },
-    testMatch: ['**/*.test.+(ts)'],
+    testMatch: ['**/*.test.+(ts|tsx)'],
     collectCoverage: true,
     coverageReporters: ['html', 'cobertura'],
     collectCoverageFrom: [
@@ -25,5 +25,6 @@ module.exports = {
     coverageDirectory: './TestCoverage/',
     transformIgnorePatterns: [],
     moduleNameMapper: {},
-    preset: 'ts-jest'
+    preset: 'ts-jest',
+    setupFiles: ['./packages/tests/setup.tsx']
 };

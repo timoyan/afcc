@@ -99,3 +99,5 @@ packages/sample/TestCoverage
 
 # Build output dir
 packages/sample/build
+
+packages/sample/packages/tests/__snapshots__
