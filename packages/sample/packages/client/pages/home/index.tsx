@@ -1,10 +1,10 @@
 import { UsersAPI } from '@sample/apis';
+import { ModalInvitationComplete } from '@sample/components/modal-invitation-complete';
 import {
     IIModalInvitationFormData,
     IIModalInvitationFormError,
     ModalInvitationForm
 } from '@sample/components/modal-invitation-form';
-import { ModalInvitationComplete } from '@sample/components/modal-invitiation-complete';
 import { produce } from 'immer';
 import * as React from 'react';
 import styled, { css } from 'react-emotion';
@@ -184,29 +184,27 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
 
     render() {
         return (
-            <React.Fragment>
-                <Wrapper>
-                    <span className={IntroCSS}>A better way</span>
-                    <span className={IntroCSS}>to enjoy every day.</span>
-                    <span className={NotedCSS}>Be the first to know when we launch.</span>
-                    <span className={ButtonCSS} onClick={this.toggleForm}>
-                        Request an invite
-                    </span>
-                    {this.state.isInvitationFormShown && (
-                        <ModalInvitationForm
-                            handleClose={this.toggleForm}
-                            handleInputChange={this.handleInputChange}
-                            handleSubmit={this.handleFormSubmit}
-                            data={this.state.formData}
-                            error={this.state.formError}
-                            isProcessing={this.state.isProcessing}
-                        />
-                    )}
-                    {this.state.isInvitationFormCompleted && (
-                        <ModalInvitationComplete handleClose={this.toggleComplete} />
-                    )}
-                </Wrapper>
-            </React.Fragment>
+            <Wrapper>
+                <span className={IntroCSS}>A better way</span>
+                <span className={IntroCSS}>to enjoy every day.</span>
+                <span className={NotedCSS}>Be the first to know when we launch.</span>
+                <span className={ButtonCSS} onClick={this.toggleForm}>
+                    Request an invite
+                </span>
+                {this.state.isInvitationFormShown && (
+                    <ModalInvitationForm
+                        handleClose={this.toggleForm}
+                        handleInputChange={this.handleInputChange}
+                        handleSubmit={this.handleFormSubmit}
+                        data={this.state.formData}
+                        error={this.state.formError}
+                        isProcessing={this.state.isProcessing}
+                    />
+                )}
+                {this.state.isInvitationFormCompleted && (
+                    <ModalInvitationComplete handleClose={this.toggleComplete} />
+                )}
+            </Wrapper>
         );
     }
 }

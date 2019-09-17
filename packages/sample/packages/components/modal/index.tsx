@@ -55,7 +55,10 @@ export class Modal extends React.PureComponent<IModalProps> {
         const { children } = this.props;
         return ReactDOM.createPortal(
             <Wrapper>
-                <Overlay onClick={this.handleOverlayClick} />
+                <Overlay
+                    data-qa-element="ModalOverlay"
+                    onClick={this.handleOverlayClick}
+                />
                 <Body>{children}</Body>
             </Wrapper>,
             document.body

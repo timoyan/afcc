@@ -102,6 +102,7 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
                     disabled={isProcessing}
                 />
                 <button
+                    data-qa-element="InvitationSubmitButton"
                     className={css({
                         width: '100%',
                         marginTop: '3rem',

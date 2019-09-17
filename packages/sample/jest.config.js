@@ -10,7 +10,7 @@ module.exports = {
             isolatedModules: true
         }
     },
-    testMatch: ['**/*.test.+(ts|tsx)'],
+    testMatch: ['**/*.test.(tsx|ts)'],
     collectCoverage: true,
     coverageReporters: ['html', 'cobertura'],
     collectCoverageFrom: [

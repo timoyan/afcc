@@ -1,6 +1,6 @@
 import { Modal } from '@sample/components/modal';
+import { ModalInvitationComplete } from '@sample/components/modal-invitation-complete';
 import { ModalInvitationForm } from '@sample/components/modal-invitation-form';
-import { ModalInvitationComplete } from '@sample/components/modal-invitiation-complete';
 import * as React from 'react';
 import * as TestRenderer from 'react-test-renderer';
 
