@@ -9,7 +9,8 @@ export class UsersAPI implements IUsersAPI {
     register = (name: string, email: string) => {
         return ajax.post(
             'https://l94wc2001h.execute-api.ap-southeast-2.amazonaws.com/prod/fake-auth',
-            { name, email }
+            { name, email },
+            { 'Content-Type': 'application/json' }
         );
     };
 }

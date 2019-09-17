@@ -38,20 +38,25 @@ const Body = styled('div')({
     }
 });
 
-const Textbox = styled('input')<{ isValid: boolean }>(
+const Textbox = styled('input')<{ isError: boolean }>(
     {
         width: '100%',
         margin: '5px 0',
         height: '3rem'
     },
-    ({ isValid = true }) => {
+    ({ isError = false }) => {
         const styles: CSSObject = {};
-        if (!isValid) {
+        if (isError) {
             styles.outline = '1.5px solid red';
         }
         return styles;
     }
 );
+
+const ErrorMessage = styled('span')({
+    marginTop: '1rem',
+    color: 'red'
+});
 
 export interface IIModalInvitationFormData {
     email: string;
@@ -59,7 +64,12 @@ export interface IIModalInvitationFormData {
     confirmEmail: string;
 }
 
-export interface IIModalInvitationFormError extends IIModalInvitationFormData {}
+export interface IIModalInvitationFormError {
+    email: boolean;
+    fullName: boolean;
+    confirmEmail: boolean;
+    serverError: string;
+}
 
 interface IModalInvitationFormProps {
     handleClose: () => void;
@@ -67,6 +77,7 @@ interface IModalInvitationFormProps {
     handleSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
     data: IIModalInvitationFormData;
     error: IIModalInvitationFormError;
+    isProcessing: boolean;
 }
 
 export class ModalInvitationForm extends React.PureComponent<IModalInvitationFormProps> {
@@ -82,7 +93,7 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
     };
 
     render() {
-        const { data, error } = this.props;
+        const { data, error, isProcessing, handleSubmit } = this.props;
         return ReactDOM.createPortal(
             <Wrapper>
                 <Overlay onClick={this.handleOverlayClick} />
@@ -110,7 +121,8 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
                         name="fullName"
                         onChange={this.handleTextChange}
                         value={data.fullName || ''}
-                        isValid={error.fullName === undefined}
+                        isError={error.fullName}
+                        disabled={isProcessing}
                     />
                     <Textbox
                         type="text"
@@ -118,7 +130,8 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
                         name="email"
                         onChange={this.handleTextChange}
                         value={data.email || ''}
-                        isValid={error.email === undefined}
+                        isError={error.email}
+                        disabled={isProcessing}
                     />
                     <Textbox
                         type="text"
@@ -126,7 +139,8 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
                         name="confirmEmail"
                         onChange={this.handleTextChange}
                         value={data.confirmEmail || ''}
-                        isValid={error.confirmEmail === undefined}
+                        isError={error.confirmEmail}
+                        disabled={isProcessing}
                     />
                     <button
                         className={css({
@@ -134,10 +148,12 @@ export class ModalInvitationForm extends React.PureComponent<IModalInvitationFor
                             marginTop: '3rem',
                             height: '3rem'
                         })}
-                        onClick={this.props.handleSubmit}
+                        onClick={handleSubmit}
+                        disabled={isProcessing}
                     >
-                        Send
+                        {isProcessing ? 'Sending, please wait...' : 'Send'}
                     </button>
+                    <ErrorMessage>{error.serverError}</ErrorMessage>
                 </Body>
             </Wrapper>,
             document.body
