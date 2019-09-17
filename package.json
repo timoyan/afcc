@@ -9,7 +9,7 @@
         "packages/*/packages/*"
     ],
     "scripts": {
-        "preinstall": "rimraf node_modules",
+        "preinstall": "rm -rf node_modules",
         "install": "npx lerna link",
         "sample-dev": "cd packages/sample && yarn dev",
         "sample-build-preprod": "cd packages/sample && yarn build-preprod",
