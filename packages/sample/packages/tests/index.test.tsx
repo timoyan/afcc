@@ -1,10 +1,12 @@
+import { UsersAPI } from '@sample/apis/users';
 import { Modal } from '@sample/components/modal';
 import { ModalInvitationComplete } from '@sample/components/modal-invitation-complete';
 import { ModalInvitationForm } from '@sample/components/modal-invitation-form';
-// import * as TestRenderer from 'react-test-renderer';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
+import { of, throwError } from 'rxjs';
+import { AjaxError, AjaxResponse } from 'rxjs/ajax';
 import { HomeComponent } from '../client/pages/home';
 
 test('Modal Testing', async () => {
@@ -171,6 +173,23 @@ test('Home Page Component Testing', async () => {
     expect(confirmEmailTextbox).toHaveProperty('value', 'bean@mail.com');
 
     // Act
+    UsersAPI.prototype.register = jest.fn().mockImplementationOnce(() => {
+        return throwError({
+            status: 400,
+            response: { errorMessage: 'Wrong!' }
+        } as AjaxError);
+    });
+
+    userEvent.click(submitButton);
+
+    // Assert
+    expect(getByText('Wrong!')).toBeTruthy();
+
+    // Act
+    UsersAPI.prototype.register = jest.fn().mockImplementationOnce(() => {
+        return of({ status: 200 } as AjaxResponse);
+    });
+
     userEvent.click(submitButton);
 
     // Assert
