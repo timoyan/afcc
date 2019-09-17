@@ -114,12 +114,20 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
     };
 
     handleFormSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        const { formData } = this.state;
-        if (this.validateFormData()) {
-            this.setState({ isProcessing: true }, () => {
+        const newFormData = this.validateFormData();
+
+        const hasError: boolean =
+            (Object.values(newFormData) as IInivitationFormField[]).filter(
+                (val: IInivitationFormField) => !!val && !val.isValid
+            ).length > 0;
+
+        if (hasError) {
+            this.setState({ formData: newFormData });
+        } else {
+            this.setState({ isProcessing: true, formData: newFormData }, () => {
                 const usersAPI = new UsersAPI();
                 usersAPI
-                    .register(formData.fullName.value, formData.email.value)
+                    .register(newFormData.fullName.value, newFormData.email.value)
                     .pipe(
                         switchMap((value, index) => {
                             return of(value);
@@ -155,7 +163,7 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
     validateFormData = () => {
         const emailReg: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-        const newFormData = produce<IInivitationForm>(this.state.formData, draft => {
+        return produce<IInivitationForm>(this.state.formData, draft => {
             draft.fullName.isValid = (draft.fullName.value || '').length >= 3;
 
             draft.email.isValid = emailReg.test(draft.email.value || '');
@@ -163,16 +171,9 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
             draft.confirmEmail.isValid =
                 draft.confirmEmail.value !== undefined &&
                 draft.confirmEmail.value === draft.email.value;
+
+            draft.serverErrorMessage = '';
         });
-
-        const hasError: boolean =
-            (Object.values(newFormData) as IInivitationFormField[]).filter(
-                (val: IInivitationFormField) => !!val && !val.isValid
-            ).length > 0;
-
-        this.setState({ formData: newFormData });
-
-        return !hasError;
     };
 
     render() {
