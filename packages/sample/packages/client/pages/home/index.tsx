@@ -108,12 +108,11 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
     };
 
     handleInputChange = (name: string, value: string) => {
-        this.setState({
-            formData: {
-                ...this.state.formData,
-                [name]: value
-            }
-        });
+        this.setState(
+            produce(this.state, draft => {
+                draft.formData[name] = value;
+            })
+        );
     };
 
     handleFormSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -133,21 +132,19 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
                     )
                     .subscribe({
                         next: (val: AjaxResponse) => {
-                            console.log(val);
                             this.setState({
                                 isInvitationFormCompleted: true,
                                 isInvitationFormShown: false
                             });
                         },
                         error: (err: AjaxError) => {
-                            console.log(err);
-                            this.setState({
-                                formError: {
-                                    ...this.state.formError,
-                                    serverError: err.response['errorMessage']
-                                },
-                                isProcessing: false
-                            });
+                            this.setState(
+                                produce(this.state, draft => {
+                                    draft.formError.serverError =
+                                        err.response['errorMessage'];
+                                    draft.isProcessing = false;
+                                })
+                            );
                         },
                         complete: () => {
                             this.setState({ isProcessing: false });
