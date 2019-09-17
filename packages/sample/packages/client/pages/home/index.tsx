@@ -200,7 +200,10 @@ export class HomeComponent extends React.Component<{}, IHomeState> {
                     />
                 )}
                 {this.state.isInvitationFormCompleted && (
-                    <ModalInvitationComplete handleClose={this.toggleComplete} />
+                    <ModalInvitationComplete
+                        handleClose={this.toggleComplete}
+                        testid={'ModalInvitationCompleteModal'}
+                    />
                 )}
             </Wrapper>
         );

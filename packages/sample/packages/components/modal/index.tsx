@@ -50,6 +50,7 @@ export class Modal extends React.PureComponent<IModalProps> {
         if (typeof handleClose === 'function') {
             handleClose();
         }
+        return;
     };
 
     render() {

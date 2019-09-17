@@ -12,7 +12,7 @@ test('Modal Testing', async () => {
     const handleClose = jest.fn();
 
     // Act
-    const { getByText, getByTestId, baseElement } = render(
+    const { getByText, getByTestId, rerender } = render(
         <Modal handleClose={handleClose}>
             <div>test</div>
         </Modal>
@@ -22,16 +22,20 @@ test('Modal Testing', async () => {
     expect(getByText('test')).toBeTruthy();
 
     // Act
-    const overlayElement = getByTestId('ModalOverlay');
-
-    // Assert
-    expect(overlayElement).toBeTruthy();
-
-    // Act
-    overlayElement.click();
+    getByTestId('ModalOverlay').click();
 
     // Assert
     expect(handleClose).toHaveBeenCalledTimes(1);
+
+    // Act
+    rerender(
+        <Modal>
+            <div>test</div>
+        </Modal>
+    );
+
+    // Act
+    getByTestId('ModalOverlay').click();
 });
 
 test('Modal Invitation Form Testing', async () => {
@@ -41,7 +45,7 @@ test('Modal Invitation Form Testing', async () => {
     const handleSubmit = jest.fn();
 
     // Act
-    const { getByTestId } = render(
+    const { getByTestId, rerender } = render(
         <ModalInvitationForm
             handleClose={handleClose}
             handleInputChange={handleInputChange}
@@ -82,6 +86,35 @@ test('Modal Invitation Form Testing', async () => {
 
     // Assert
     expect(handleSubmit).toHaveBeenCalledTimes(1);
+
+    // Act
+    rerender(
+        <ModalInvitationForm
+            handleClose={handleClose}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            formData={{
+                fullName: {
+                    value: 'ff',
+                    isValid: false
+                },
+                email: {
+                    value: undefined,
+                    isValid: true
+                },
+                confirmEmail: {
+                    value: undefined,
+                    isValid: true
+                },
+                serverErrorMessage: undefined
+            }}
+            isProcessing={false}
+            testid="ModalInvitationFormModal"
+        />
+    );
+
+    // Assert
+    expect(getByTestId('fullNameTextbox')).toHaveStyle(`outline: 1.5px solid red;`);
 });
 
 test('Modal Invitation Complete Testing', async () => {
@@ -102,7 +135,7 @@ test('Modal Invitation Complete Testing', async () => {
 
 test('Home Page Component Testing', async () => {
     // Act
-    const { getByText, getByTestId } = render(<HomeComponent />);
+    const { getByText, getByTestId, queryByTestId } = render(<HomeComponent />);
     const requestButton = getByText('Request an invite');
 
     // Assert
@@ -129,7 +162,16 @@ test('Home Page Component Testing', async () => {
     expect(confirmEmailTextbox).toHaveProperty('value', 'bean@mail.com');
 
     // Act
-    jest.mock('@sample/apis/users');
     const submitButton = getByTestId('InvitationSubmitButton');
     userEvent.click(submitButton);
+
+    // Assert
+    expect(getByTestId('ModalInvitationCompleteModal')).toBeTruthy();
+
+    // Act
+    const completeButton = getByTestId('InvitationCompleteButton');
+    userEvent.click(completeButton);
+
+    // Assert
+    expect(queryByTestId('ModalInvitationCompleteModal')).toBeNull();
 });

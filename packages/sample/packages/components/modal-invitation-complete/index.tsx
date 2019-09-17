@@ -49,7 +49,7 @@ export class ModalInvitationComplete extends React.PureComponent<
                         height: '3rem'
                     })}
                     onClick={this.props.handleClose}
-                    data-qa-element={'InvitationCompleteButton'}
+                    data-testid={'InvitationCompleteButton'}
                 >
                     OK
                 </button>
