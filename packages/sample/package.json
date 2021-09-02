@@ -9,7 +9,7 @@
     "dependencies": {
         "emotion": "9.2.10",
         "emotion-theming": "9.2.9",
-        "immer": "1.7.2",
+        "immer": "9.0.6",
         "normalize.css": "8.0.1",
         "react": "16.9.0",
         "react-dom": "16.9.0",
